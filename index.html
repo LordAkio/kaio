@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My Google AI Studio App</title>
+    <script>
+      window.pixelId = "69b1c20270a781f062cfe4f8";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(a);
+    </script>
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-prevent-subids
+      async
+      defer
+    ></script>
+    <script>
+      (function() {
+        // Parâmetros de UTM fornecidos pelo usuário
+        const defaultUtms = "utm_source=FB&utm_campaign={{campaign.name}}|{{campaign.id}}&utm_medium={{adset.name}}|{{adset.id}}&utm_content={{ad.name}}|{{ad.id}}&utm_term={{placement}}";
+        
+        function updateLinks() {
+          const queryParams = new URLSearchParams(window.location.search);
+          const hasUtms = Array.from(queryParams.keys()).some(key => key.startsWith('utm_'));
+          
+          // Se não houver UTMs na URL, podemos usar os padrões (opcional, dependendo da estratégia)
+          // Mas o mais importante é passar o que está na URL adiante.
+          
+          const links = document.querySelectorAll('a, button[data-href]');
+          links.forEach(link => {
+            let href = link.getAttribute('href') || link.getAttribute('data-href');
+            if (href && (href.includes('checkout') || href.includes('pay') || href.includes('hotmart') || href.includes('kiwify'))) {
+              const url = new URL(href, window.location.origin);
+              
+              // Adiciona os UTMs da URL atual ao link de checkout
+              queryParams.forEach((value, key) => {
+                url.searchParams.set(key, value);
+              });
+              
+              // Se não tinha UTMs, mas queremos garantir o rastreio do FB
+              if (!hasUtms && defaultUtms) {
+                const defaultParams = new URLSearchParams(defaultUtms);
+                defaultParams.forEach((value, key) => {
+                  if (!url.searchParams.has(key)) {
+                    url.searchParams.set(key, value);
+                  }
+                });
+              }
+              
+              if (link.tagName === 'A') {
+                link.setAttribute('href', url.toString());
+              } else {
+                link.setAttribute('data-href', url.toString());
+              }
+            }
+          });
+        }
+        
+        window.addEventListener('load', updateLinks);
+        // Também observa mudanças no DOM para links dinâmicos
+        const observer = new MutationObserver(updateLinks);
+        observer.observe(document.body, { childList: true, subtree: true });
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
