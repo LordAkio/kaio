@@ -110,12 +110,16 @@ export default function App() {
               <div className="flex flex-col gap-3">
                 <a 
                   href="https://www.ggcheckout.com/checkout/v5/FF3xjLGZkm6VNZVyY5nf"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-full py-4 rounded-xl bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-200 transition-all hover:bg-emerald-700 active:scale-95 text-center block"
                 >
                   SIM! QUERO O PACOTE COMPLETO (R$ 17)
                 </a>
                 <a 
                   href="https://www.ggcheckout.com/checkout/v5/WTkRS3Pm9OiYw7TkyvUD"
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-full py-2 text-gray-400 text-sm font-medium hover:text-gray-600 transition-colors text-center block"
                 >
                   Não, prefiro ficar apenas com o básico por R$ 10
@@ -179,8 +183,8 @@ export default function App() {
               className="mt-12 w-full max-w-3xl rounded-2xl border border-white/20 bg-white/30 p-2 shadow-2xl backdrop-blur-sm"
             >
               <img 
-                src="https://i.imgur.com/ed2BIyR.jpeg" 
-                alt="1500 Atividades Lúdicas" 
+                src="https://i.imgur.com/a01nr5H.png" 
+                alt="1500 Atividades Lúdicas - Pacote Completo" 
                 className="w-full h-auto rounded-xl shadow-lg"
                 referrerPolicy="no-referrer"
               />
@@ -353,6 +357,7 @@ export default function App() {
               </ul>
               
               <button 
+                type="button"
                 onClick={() => setIsUpsellOpen(true)}
                 className="w-full py-4 rounded-xl border-2 border-emerald-600 text-emerald-600 font-bold text-lg transition-all hover:bg-emerald-50 active:scale-95"
               >
@@ -397,6 +402,8 @@ export default function App() {
               
               <a 
                 href="https://www.ggcheckout.com/checkout/v5/vrKkH2lSsniheIZ13k0M"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-full py-4 rounded-xl bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-200 transition-all hover:bg-emerald-700 active:scale-95 text-center block"
               >
                 QUERO O PACOTE PREMIUM
@@ -544,9 +551,9 @@ export default function App() {
             </div>
             
             <div className="flex flex-wrap justify-center gap-6 text-sm font-medium">
-              <a href="#" className="hover:text-white transition-colors">Termos de uso</a>
-              <a href="#" className="hover:text-white transition-colors">Política de privacidade</a>
-              <a href="#" className="hover:text-white transition-colors">Suporte</a>
+              <button type="button" className="hover:text-white transition-colors">Termos de uso</button>
+              <button type="button" className="hover:text-white transition-colors">Política de privacidade</button>
+              <button type="button" className="hover:text-white transition-colors">Suporte</button>
             </div>
           </div>
           
