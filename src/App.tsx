@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   CheckCircle2, 
   Clock, 
@@ -51,9 +51,32 @@ const FAQItem = ({ question, answer }: { question: string, answer: string }) => 
 
 export default function App() {
   const [isUpsellOpen, setIsUpsellOpen] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(30 * 60);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => (prev > 0 ? prev - 1 : 0));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
   return (
-    <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-emerald-100 selection:text-emerald-900">
+    <div className="min-h-screen bg-white font-sans text-gray-900 selection:bg-brand-yellow/30 selection:text-brand-orange">
+      {/* Countdown Ribbon */}
+      <div className="bg-brand-orange text-white py-2.5 px-4 text-center font-bold text-sm md:text-base sticky top-0 z-50 shadow-lg flex items-center justify-center gap-2">
+        <Clock className="h-4 w-4 animate-pulse" />
+        <span>OFERTA POR TEMPO LIMITADO:</span>
+        <span className="font-mono bg-white/20 px-2 py-0.5 rounded tabular-nums">
+          {formatTime(timeLeft)}
+        </span>
+      </div>
+
       {/* Upsell Popup */}
       <AnimatePresence>
         {isUpsellOpen && (
@@ -64,7 +87,7 @@ export default function App() {
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="bg-white rounded-3xl p-8 max-w-lg w-full shadow-2xl relative overflow-hidden"
             >
-              <div className="absolute top-0 left-0 w-full h-2 bg-emerald-500"></div>
+              <div className="absolute top-0 left-0 w-full h-2 bg-brand-orange"></div>
               <button 
                 onClick={() => setIsUpsellOpen(false)}
                 className="absolute top-4 right-4 p-2 text-gray-400 hover:text-gray-600 transition-colors"
@@ -73,21 +96,21 @@ export default function App() {
               </button>
               
               <div className="text-center mb-8">
-                <div className="inline-flex p-3 rounded-full bg-emerald-100 text-emerald-600 mb-4">
+                <div className="inline-flex p-3 rounded-full bg-brand-yellow/30 text-brand-orange mb-4">
                   <Zap className="h-8 w-8" />
                 </div>
                 <h2 className="text-2xl md:text-3xl font-black text-gray-900 mb-2 leading-tight uppercase">Espere! Oferta Especial</h2>
                 <p className="text-gray-600">Você selecionou o plano básico, mas por que não levar o <strong>PACOTE COMPLETO</strong> agora?</p>
               </div>
               
-              <div className="bg-emerald-50 rounded-2xl p-6 mb-8 border border-emerald-100">
-                <p className="text-emerald-800 font-bold text-center mb-4">Leve TUDO do Plano Premium por apenas:</p>
+              <div className="bg-brand-yellow/20 rounded-2xl p-6 mb-8 border border-brand-yellow">
+                <p className="text-brand-orange font-bold text-center mb-4">Leve TUDO do Plano Premium por apenas:</p>
                 <div className="flex items-baseline justify-center gap-1">
-                  <span className="text-xl font-bold text-emerald-600">R$</span>
-                  <span className="text-6xl font-black text-emerald-600">17</span>
-                  <span className="text-emerald-600 font-medium">,00</span>
+                  <span className="text-xl font-bold text-brand-orange">R$</span>
+                  <span className="text-6xl font-black text-brand-orange">17</span>
+                  <span className="text-brand-orange font-medium">,00</span>
                 </div>
-                <p className="text-center text-sm text-emerald-600 mt-2 font-medium">Economia de R$ 10,00 sobre o preço normal!</p>
+                <p className="text-center text-sm text-brand-orange mt-2 font-medium">Economia de R$ 10,00 sobre o preço normal!</p>
               </div>
               
               <div className="space-y-3 mb-8">
@@ -100,7 +123,7 @@ export default function App() {
                     "100 Atividades Emocionais e Calma"
                   ].map((item, i) => (
                     <li key={i} className="flex items-center gap-2 text-sm text-gray-700">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500 flex-shrink-0" />
+                      <CheckCircle2 className="h-4 w-4 text-brand-turquoise flex-shrink-0" />
                       <span>{item}</span>
                     </li>
                   ))}
@@ -112,7 +135,7 @@ export default function App() {
                   href="https://www.ggcheckout.com/checkout/v5/FF3xjLGZkm6VNZVyY5nf"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full py-4 rounded-xl bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-200 transition-all hover:bg-emerald-700 active:scale-95 text-center block"
+                  className="w-full py-4 rounded-xl bg-brand-orange text-white font-bold text-lg shadow-lg shadow-brand-orange/20 transition-all hover:bg-brand-orange/90 active:scale-95 text-center block"
                 >
                   SIM! QUERO O PACOTE COMPLETO (R$ 17)
                 </a>
@@ -130,25 +153,16 @@ export default function App() {
         )}
       </AnimatePresence>
       {/* 1️⃣ HERO SECTION */}
-      <header className="relative overflow-hidden bg-emerald-50 pt-16 pb-24 lg:pt-24 lg:pb-32">
+      <header className="relative overflow-hidden bg-brand-yellow/10 pt-16 pb-24 lg:pt-24 lg:pb-32">
         <div className="container mx-auto px-4 relative z-10">
           <div className="flex flex-col items-center text-center max-w-4xl mx-auto">
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-4 py-1.5 text-sm font-semibold text-emerald-700 mb-6"
-            >
-              <Zap className="h-4 w-4" />
-              <span>Entrega Imediata via E-mail</span>
-            </motion.div>
-            
             <motion.h1 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
               className="text-4xl md:text-6xl font-extrabold tracking-tight text-gray-900 mb-6 leading-tight"
             >
-              Transforme o Caos da Sala de Aula em Aprendizado com +1500 Atividades Lúdicas
+              1500 Atividades Lúdicas Prontas para Engajar Crianças
             </motion.h1>
             
             <motion.p 
@@ -157,8 +171,24 @@ export default function App() {
               transition={{ delay: 0.2 }}
               className="text-xl text-gray-600 mb-10 max-w-2xl"
             >
-              Dinâmicas simples, rápidas e eficazes para acalmar a turma, recuperar a atenção e tornar o aprendizado mais divertido — mesmo em dias difíceis.
+              Mais de 1500 atividades lúdicas organizadas por situações reais para acalmar a turma, recuperar a atenção e conduzir sua aula com mais leveza e menos estresse.
             </motion.p>
+
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.25 }}
+              className="mb-10 w-full max-w-2xl rounded-2xl overflow-hidden shadow-2xl border-4 border-white bg-black"
+            >
+              <video 
+                controls 
+                className="w-full aspect-video"
+                poster="https://i.imgur.com/cymWUTk.jpg"
+              >
+                <source src="https://i.imgur.com/cymWUTk.mp4" type="video/mp4" />
+                Seu navegador não suporta o elemento de vídeo.
+              </video>
+            </motion.div>
             
             <motion.div 
               initial={{ opacity: 0, scale: 0.9 }}
@@ -166,51 +196,28 @@ export default function App() {
               transition={{ delay: 0.3 }}
               className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto"
             >
-              <a 
+              <motion.a 
                 href="#oferta" 
-                className="inline-flex items-center justify-center rounded-xl bg-emerald-600 px-8 py-4 text-lg font-bold text-white shadow-lg shadow-emerald-200 transition-all hover:bg-emerald-700 hover:scale-105 active:scale-95"
+                animate={{ scale: [1, 1.05, 1] }}
+                transition={{ 
+                  duration: 1.5, 
+                  repeat: Infinity, 
+                  ease: "easeInOut" 
+                }}
+                className="inline-flex items-center justify-center rounded-xl bg-brand-orange px-8 py-4 text-lg font-bold text-white shadow-lg shadow-brand-orange/20 transition-all hover:bg-brand-orange/90 active:scale-95"
               >
                 QUERO ACESSAR AGORA
                 <ArrowRight className="ml-2 h-5 w-5" />
-              </a>
+              </motion.a>
             </motion.div>
 
-            {/* Product Mockup - Moved here as requested */}
-            <motion.div 
-              initial={{ opacity: 0, y: 40 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5, duration: 0.8 }}
-              className="mt-12 w-full max-w-3xl rounded-2xl border border-white/20 bg-white/30 p-2 shadow-2xl backdrop-blur-sm"
-            >
-              <img 
-                src="https://i.imgur.com/a01nr5H.png" 
-                alt="1500 Atividades Lúdicas - Pacote Completo" 
-                className="w-full h-auto rounded-xl shadow-lg"
-                referrerPolicy="no-referrer"
-              />
-            </motion.div>
             
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-              className="mt-8 flex flex-wrap justify-center gap-6 text-sm text-gray-500 font-medium"
-            >
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="h-5 w-5 text-emerald-600" />
-                <span>7 Dias de Garantia</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Download className="h-5 w-5 text-emerald-600" />
-                <span>Download em PDF</span>
-              </div>
-            </motion.div>
           </div>
         </div>
         
         {/* Background Decorative Elements */}
-        <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-emerald-200 rounded-full blur-3xl opacity-30"></div>
-        <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-teal-200 rounded-full blur-3xl opacity-30"></div>
+        <div className="absolute top-0 left-0 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-brand-yellow rounded-full blur-3xl opacity-20"></div>
+        <div className="absolute bottom-0 right-0 translate-x-1/2 translate-y-1/2 w-96 h-96 bg-brand-turquoise rounded-full blur-3xl opacity-20"></div>
       </header>
 
       {/* 2️⃣ BENEFÍCIOS PRINCIPAIS */}
@@ -218,28 +225,28 @@ export default function App() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Por que este material é essencial para você?</h2>
-            <div className="h-1.5 w-20 bg-emerald-500 mx-auto rounded-full"></div>
+            <div className="h-1.5 w-20 bg-brand-orange mx-auto rounded-full"></div>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
               { 
-                icon: <Clock className="h-8 w-8 text-emerald-600" />, 
+                icon: <Clock className="h-8 w-8 text-brand-orange" />, 
                 title: "Economia de tempo", 
                 desc: "Nunca mais perca horas procurando atividades na internet." 
               },
               { 
-                icon: <Users className="h-8 w-8 text-emerald-600" />, 
+                icon: <Users className="h-8 w-8 text-brand-purple" />, 
                 title: "Turma mais engajada", 
                 desc: "Atividades que capturam a atenção e o interesse dos alunos." 
               },
               { 
-                icon: <Zap className="h-8 w-8 text-emerald-600" />, 
+                icon: <Zap className="h-8 w-8 text-brand-turquoise" />, 
                 title: "Menos estresse", 
                 desc: "Tenha sempre uma solução pronta para momentos difíceis." 
               },
               { 
-                icon: <Smile className="h-8 w-8 text-emerald-600" />, 
+                icon: <Smile className="h-8 w-8 text-brand-orange" />, 
                 title: "Sem materiais caros", 
                 desc: "90% das atividades usam apenas o corpo ou materiais simples." 
               }
@@ -247,9 +254,9 @@ export default function App() {
               <motion.div 
                 key={idx}
                 whileHover={{ y: -5 }}
-                className="p-8 rounded-2xl bg-gray-50 border border-gray-100 transition-all hover:shadow-xl hover:bg-white"
+                className="p-8 rounded-2xl bg-gray-50 border border-gray-100 transition-all hover:shadow-xl hover:bg-white text-center flex flex-col items-center"
               >
-                <div className="mb-6 inline-flex p-3 rounded-xl bg-emerald-100">
+                <div className="mb-6 inline-flex p-3 rounded-xl bg-brand-yellow/30">
                   {item.icon}
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">{item.title}</h3>
@@ -260,98 +267,165 @@ export default function App() {
         </div>
       </section>
 
-      {/* 3️⃣ ORGANIZAÇÃO DO MATERIAL */}
-      <section className="py-24 bg-gray-50">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-16 max-w-3xl mx-auto">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Organizado por situações reais</h2>
-            <p className="text-lg text-gray-600">Encontre exatamente o que você precisa em segundos, de acordo com o clima da sua sala.</p>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              { title: "Agitação excessiva", items: ["Dinâmicas de calma", "Foco sensorial", "Respiração lúdica"] },
-              { title: "Falta de atenção", items: ["Desafios rápidos", "Jogos de escuta", "Comandos motores"] },
-              { title: "Emoções difíceis", items: ["Roda das emoções", "Teatro de fantoches", "Pote da calma"] },
-              { title: "Socialização", items: ["Jogos cooperativos", "Dinâmicas de grupo", "Quebra-gelos"] },
-              { title: "Transições", items: ["Músicas de arrumação", "Rituais de entrada", "Sinais criativos"] },
-              { title: "E muito mais...", items: ["Datas comemorativas", "Atividades ao ar livre", "Projetos rápidos"] }
-            ].map((card, idx) => (
-              <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100">
-                <h3 className="text-xl font-bold text-emerald-700 mb-4">{card.title}</h3>
-                <ul className="space-y-3">
-                  {card.items.map((item, i) => (
-                    <li key={i} className="flex items-center gap-2 text-gray-600">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                      <span>{item}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
 
 
       {/* 5️⃣ BÔNUS EXCLUSIVOS */}
-      <section className="py-24 bg-emerald-900 text-white overflow-hidden relative">
+      <section className="py-24 bg-brand-purple text-white overflow-hidden relative">
         <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-sm font-bold uppercase tracking-wider mb-4">Oferta Especial</span>
+            <span className="inline-block px-4 py-1 rounded-full bg-brand-turquoise/20 text-brand-turquoise text-sm font-bold uppercase tracking-wider mb-4">Oferta Especial</span>
             <h2 className="text-3xl md:text-4xl font-bold mb-4">Você ainda leva 3 Bônus Exclusivos</h2>
-            <p className="text-emerald-200/70 max-w-2xl mx-auto">Comprando hoje, você garante acesso a materiais complementares que vão acelerar seus resultados.</p>
+            <p className="text-brand-yellow/70 max-w-2xl mx-auto">Comprando hoje, você garante acesso a materiais complementares que vão acelerar seus resultados.</p>
           </div>
           
-          <div className="max-w-4xl mx-auto">
-            <img 
-              src="https://i.imgur.com/a01nr5H.png" 
-              alt="Pacote de Bônus Exclusivos" 
-              className="w-full h-auto rounded-3xl shadow-2xl border-4 border-emerald-500/30"
-              referrerPolicy="no-referrer"
-            />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+            {/* Bônus 1 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -10 }}
+              className="bg-white rounded-3xl text-gray-900 shadow-xl border-t-8 border-brand-orange relative overflow-hidden flex flex-col h-full"
+            >
+              <div className="absolute top-4 right-4 bg-brand-orange text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase z-20">Grátis</div>
+              
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="https://i.imgur.com/a7qwCVy.jpeg" 
+                  alt="120 Dinâmicas Sem Material" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+
+              <div className="p-8 pt-0 flex-grow">
+                <div className="bg-brand-orange/10 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-brand-orange -mt-6 relative z-10">
+                  <Smile className="h-6 w-6" />
+                </div>
+                <span className="text-brand-orange font-bold text-xs uppercase tracking-widest mb-1 block">Bônus #1</span>
+                <h3 className="text-xl font-bold mb-3">120 Dinâmicas Sem Material</h3>
+                <p className="text-gray-600 text-sm mb-6">Atividades rápidas para aplicar em qualquer lugar, sem precisar de nada além da sua voz e criatividade.</p>
+              </div>
+
+              <div className="px-8 pb-8 mt-auto">
+                <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
+                  <span className="text-gray-400 line-through text-sm">De R$ 47,00</span>
+                  <span className="text-brand-orange font-black">POR R$ 0,00</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Bônus 2 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              whileHover={{ y: -10 }}
+              className="bg-white rounded-3xl text-gray-900 shadow-xl border-t-8 border-brand-yellow relative overflow-hidden flex flex-col h-full"
+            >
+              <div className="absolute top-4 right-4 bg-brand-yellow text-gray-900 text-[10px] font-bold px-2 py-1 rounded-full uppercase z-20">Grátis</div>
+              
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="https://i.imgur.com/Tbo2UI9.jpeg" 
+                  alt="80 Rotinas Lúdicas" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+
+              <div className="p-8 pt-0 flex-grow">
+                <div className="bg-brand-yellow/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-brand-yellow -mt-6 relative z-10">
+                  <Zap className="h-6 w-6" />
+                </div>
+                <span className="text-brand-yellow font-bold text-xs uppercase tracking-widest mb-1 block">Bônus #2</span>
+                <h3 className="text-xl font-bold mb-3">80 Rotinas Lúdicas</h3>
+                <p className="text-gray-600 text-sm mb-6">Um guia completo com rotinas prontas para organizar o dia a dia e manter as crianças engajadas.</p>
+              </div>
+
+              <div className="px-8 pb-8 mt-auto">
+                <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
+                  <span className="text-gray-400 line-through text-sm">De R$ 67,00</span>
+                  <span className="text-brand-yellow font-black">POR R$ 0,00</span>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Bônus 3 */}
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.2 }}
+              whileHover={{ y: -10 }}
+              className="bg-white rounded-3xl text-gray-900 shadow-xl border-t-8 border-brand-turquoise relative overflow-hidden flex flex-col h-full"
+            >
+              <div className="absolute top-4 right-4 bg-brand-turquoise text-white text-[10px] font-bold px-2 py-1 rounded-full uppercase z-20">Grátis</div>
+              
+              <div className="relative h-48 overflow-hidden">
+                <img 
+                  src="https://i.imgur.com/HuV4nlo.jpeg" 
+                  alt="100 Atividades Emocionais e Calmas" 
+                  className="w-full h-full object-cover"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+
+              <div className="p-8 pt-0 flex-grow">
+                <div className="bg-brand-turquoise/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-brand-turquoise -mt-6 relative z-10">
+                  <BookOpen className="h-6 w-6" />
+                </div>
+                <span className="text-brand-turquoise font-bold text-xs uppercase tracking-widest mb-1 block">Bônus #3</span>
+                <h3 className="text-xl font-bold mb-3">100 Atividades Emocionais e Calmas</h3>
+                <p className="text-gray-600 text-sm mb-6">Ajude as crianças a identificar emoções e encontrar momentos de calma com atividades práticas e envolventes.</p>
+              </div>
+
+              <div className="px-8 pb-8 mt-auto">
+                <div className="pt-6 border-t border-gray-100 flex items-center justify-between">
+                  <span className="text-gray-400 line-through text-sm">De R$ 97,00</span>
+                  <span className="text-brand-turquoise font-black">POR R$ 0,00</span>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </div>
         
         {/* Decorative background */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500/10 rounded-full blur-3xl"></div>
+        <div className="absolute top-0 right-0 w-64 h-64 bg-brand-turquoise/10 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-brand-orange/10 rounded-full blur-3xl"></div>
       </section>
 
       {/* 6️⃣ SEÇÃO DE OFERTA */}
       <section id="oferta" className="py-24 bg-gray-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Escolha o seu plano</h2>
-            <p className="text-gray-600">Acesso imediato após a confirmação do pagamento.</p>
+            <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4 uppercase tracking-tight">Escolha Seu Plano</h2>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto items-start">
             {/* Plano Básico */}
-            <div className="bg-white rounded-3xl p-8 border border-gray-200 shadow-sm flex flex-col">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">PLANO BÁSICO</h3>
-              <p className="text-gray-500 mb-6">O essencial para começar.</p>
+            <div className="bg-white rounded-3xl p-10 border border-gray-200 shadow-sm flex flex-col text-center">
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Plano Básico</h3>
               
-              <div className="mb-8">
-                <span className="text-gray-400 line-through text-lg">R$ 47,90</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-bold text-gray-900">R$</span>
-                  <span className="text-6xl font-black text-gray-900">10</span>
-                  <span className="text-gray-500 font-medium">,00</span>
-                </div>
+              <div className="mb-2">
+                <span className="text-gray-400 line-through text-xl mr-2">R$47</span>
+                <span className="text-5xl font-black text-green-600">R$10,00</span>
               </div>
+              <p className="text-gray-500 font-medium mb-2">pagamento único</p>
+              <p className="text-yellow-500 font-bold mb-8">Você economiza R$37,00</p>
               
-              <ul className="space-y-4 mb-10 flex-grow">
+              <ul className="space-y-4 mb-10 text-left">
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                  <span className="text-gray-700 font-medium">+1500 atividades</span>
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span className="text-gray-700 font-medium">+1500 Atividades Lúdicas PDF</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                  <span className="text-gray-700 font-medium">Acesso imediato</span>
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span className="text-gray-700 font-medium">Acesso digital</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
                   <span className="text-gray-700 font-medium">Garantia de 7 dias</span>
                 </li>
               </ul>
@@ -359,44 +433,41 @@ export default function App() {
               <button 
                 type="button"
                 onClick={() => setIsUpsellOpen(true)}
-                className="w-full py-4 rounded-xl border-2 border-emerald-600 text-emerald-600 font-bold text-lg transition-all hover:bg-emerald-50 active:scale-95"
+                className="w-full py-5 rounded-xl bg-yellow-400 text-gray-900 font-black text-lg transition-all hover:bg-yellow-500 active:scale-95 shadow-md uppercase"
               >
-                QUERO O PACOTE BÁSICO
+                ESCOLHER PLANO BÁSICO
               </button>
             </div>
             
             {/* Plano Premium */}
-            <div className="bg-white rounded-3xl p-8 border-4 border-emerald-500 shadow-2xl relative flex flex-col transform md:scale-105 z-10">
-              <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-emerald-500 text-white text-sm font-bold px-6 py-1.5 rounded-full shadow-lg">MAIS POPULAR</div>
+            <div className="bg-white rounded-3xl p-10 border-2 border-green-600 shadow-2xl relative flex flex-col text-center z-10">
+              <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-yellow-400 text-gray-900 text-xs font-black px-8 py-2 rounded-md shadow-md uppercase tracking-wider">MAIS POPULAR</div>
               
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">PLANO PREMIUM</h3>
-              <p className="text-gray-500 mb-6">O pacote completo para sua carreira.</p>
+              <h3 className="text-2xl font-bold text-gray-900 mb-6">Plano Premium</h3>
+              
+              <div className="mb-2">
+                <span className="text-gray-400 line-through text-xl mr-2">R$97</span>
+                <span className="text-5xl font-black text-green-600">R$27,00</span>
+              </div>
+              <p className="text-gray-500 font-medium mb-2">pagamento único</p>
+              <p className="text-yellow-500 font-bold mb-4">Você economiza R$70,00 + R$97 em bônus</p>
               
               <div className="mb-8">
-                <span className="text-gray-400 line-through text-lg">R$ 97,90</span>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-2xl font-bold text-emerald-600">R$</span>
-                  <span className="text-6xl font-black text-emerald-600">27</span>
-                  <span className="text-emerald-600 font-medium">,00</span>
-                </div>
+                <span className="inline-block bg-gray-100 text-gray-600 text-[10px] font-bold px-3 py-1 rounded-full">+1736 pessoas escolheram essa oferta</span>
               </div>
               
-              <ul className="space-y-4 mb-10 flex-grow">
+              <ul className="space-y-4 mb-10 text-left">
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                  <span className="text-gray-900 font-bold">+1500 atividades</span>
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span className="text-gray-700 font-medium">BÔNUS: 120 Dinâmicas sem Material</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                  <span className="text-gray-900 font-bold">120 dinâmicas sem material</span>
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span className="text-gray-700 font-medium">BÔNUS: 80 Rotinas Lúdicas Prontas</span>
                 </li>
                 <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                  <span className="text-gray-900 font-bold">80 rotinas lúdicas prontas</span>
-                </li>
-                <li className="flex items-center gap-3">
-                  <CheckCircle2 className="h-5 w-5 text-emerald-500" />
-                  <span className="text-gray-900 font-bold">100 atividades emocionais e calma</span>
+                  <CheckCircle2 className="h-5 w-5 text-green-600" />
+                  <span className="text-gray-700 font-medium">BÔNUS: 100 Atividades Emocionais e Calmas</span>
                 </li>
               </ul>
               
@@ -404,9 +475,9 @@ export default function App() {
                 href="https://www.ggcheckout.com/checkout/v5/vrKkH2lSsniheIZ13k0M"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="w-full py-4 rounded-xl bg-emerald-600 text-white font-bold text-lg shadow-lg shadow-emerald-200 transition-all hover:bg-emerald-700 active:scale-95 text-center block"
+                className="w-full py-5 rounded-xl bg-green-600 text-white font-black text-lg shadow-lg shadow-green-600/20 transition-all hover:bg-green-700 active:scale-95 text-center block uppercase"
               >
-                QUERO O PACOTE PREMIUM
+                ESCOLHER PLANO PREMIUM
               </a>
             </div>
           </div>
@@ -419,8 +490,8 @@ export default function App() {
           <div className="flex flex-col md:flex-row items-center gap-12 p-8 md:p-12 rounded-3xl bg-gray-50 border border-gray-100">
             <div className="flex-shrink-0">
               <div className="relative">
-                <ShieldCheck className="h-32 w-32 text-emerald-600" />
-                <div className="absolute inset-0 bg-emerald-600/10 blur-2xl rounded-full"></div>
+                <ShieldCheck className="h-32 w-32 text-brand-orange" />
+                <div className="absolute inset-0 bg-brand-orange/10 blur-2xl rounded-full"></div>
               </div>
             </div>
             <div>
@@ -428,7 +499,7 @@ export default function App() {
               <p className="text-gray-600 leading-relaxed mb-6">
                 Eu confio tanto na qualidade deste material que ofereço uma garantia total. Se por qualquer motivo você achar que o conteúdo não é para você, basta me enviar um e-mail em até 7 dias e eu devolvo 100% do seu dinheiro. Sem perguntas, sem burocracia.
               </p>
-              <p className="text-sm font-bold text-emerald-700 uppercase tracking-widest">Risco Zero para Você</p>
+              <p className="text-sm font-bold text-brand-orange uppercase tracking-widest">Risco Zero para Você</p>
             </div>
           </div>
         </div>
@@ -440,7 +511,7 @@ export default function App() {
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">O que dizem quem já usa</h2>
             <div className="flex justify-center gap-1 mb-4">
-              {[1,2,3,4,5].map(i => <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />)}
+              {[1,2,3,4,5].map(i => <Star key={i} className="h-5 w-5 fill-brand-yellow text-brand-yellow" />)}
             </div>
           </div>
           
@@ -463,11 +534,11 @@ export default function App() {
               }
             ].map((testimonial, idx) => (
               <div key={idx} className="bg-white p-8 rounded-2xl shadow-sm border border-gray-100 relative">
-                <div className="text-emerald-200 absolute top-4 right-8 text-6xl font-serif opacity-50">"</div>
+                <div className="text-brand-turquoise/30 absolute top-4 right-8 text-6xl font-serif opacity-50">"</div>
                 <p className="text-gray-600 italic mb-6 relative z-10 leading-relaxed">{testimonial.text}</p>
                 <div>
                   <p className="font-bold text-gray-900">{testimonial.name}</p>
-                  <p className="text-sm text-emerald-600 font-medium">{testimonial.role}</p>
+                  <p className="text-sm text-brand-purple font-medium">{testimonial.role}</p>
                 </div>
               </div>
             ))}
@@ -513,21 +584,21 @@ export default function App() {
       </section>
 
       {/* 🔟 CTA FINAL */}
-      <section className="py-24 bg-emerald-600 text-white text-center relative overflow-hidden">
+      <section className="py-24 bg-brand-orange text-white text-center relative overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <h2 className="text-3xl md:text-5xl font-extrabold mb-8 max-w-3xl mx-auto leading-tight">
             Transforme sua sala de aula ainda hoje
           </h2>
-          <p className="text-xl text-emerald-100 mb-12 max-w-2xl mx-auto">
+          <p className="text-xl text-brand-yellow mb-12 max-w-2xl mx-auto">
             Pare de perder tempo e comece a encantar seus alunos com atividades que realmente funcionam.
           </p>
           <a 
             href="#oferta" 
-            className="inline-flex items-center justify-center rounded-2xl bg-white px-10 py-5 text-xl font-black text-emerald-600 shadow-2xl transition-all hover:scale-105 active:scale-95"
+            className="inline-flex items-center justify-center rounded-2xl bg-white px-10 py-5 text-xl font-black text-brand-orange shadow-2xl transition-all hover:scale-105 active:scale-95"
           >
             SIM! QUERO ACESSO AGORA
           </a>
-          <p className="mt-8 text-emerald-200 text-sm font-medium flex items-center justify-center gap-2">
+          <p className="mt-8 text-white/80 text-sm font-medium flex items-center justify-center gap-2">
             <ShieldCheck className="h-4 w-4" />
             Compra 100% Segura e Garantida
           </p>
